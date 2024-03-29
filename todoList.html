@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous" />
+  <title>Todo List</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <h1 class="mt-5 text-center">Todo List</h1>
+                <!-- 입력 부분 시작-->
+                <div class="input-group mb-3 mt-3">
+                    <input type="text" class="form-control" id="todoInput" placeholder="New Talk">
+                    <button class="btn btn-primary" id="addTodo">Add</button>
+                </div>
+                <!-- 입력 부분 끝 -->
+                <!-- 리스트 출력 시작 -->
+                <ul class="list-group" id="todoList">
+                </ul>
+                <!-- 리스트 출력 끝 -->
+            </div>
+        </div>
+    </div>    
+
+  <!-- 부트스트랩 -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" 
+          crossorigin="anonymous"></script>
+  <!-- 부트스트랩 -->
+  <!-- Java Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOMContentLoaded')
+        getTodos();
+    })
+
+    // input에 입력한 text를 추가하는 부분
+    document.getElementById('addTodo').addEventListener('click', function () {
+        console.log('clicked!')
+        var value = document.getElementById('todoInput').value;
+        if(value) {
+            addTodo(value);
+            document.getElementById('todoInput').value = '';
+            postTodos();
+        }
+    })
+
+    // String을 받아서 저장하는 부분
+    function addTodo(text) {
+        var list = document.getElementById('todoList');
+        var item = document.createElement('li');
+        var checkBtn = document.createElement('input');
+        var listSpan = document.createElement('span');
+        var editBtn = document.createElement('button')
+        var deleteBtn = document.createElement('button')
+
+        
+
+        checkBtn.type = 'checkbox';
+        checkBtn.classList.add('form-check-input', 'me-1');
+
+        listSpan.textContent = text;
+    
+        item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        
+        checkBtn.addEventListener('change', function () {
+            if(checkBtn.checked) {
+                listSpan.classList.add('text-decoration-line-through');
+                item.style.backgroundColor = "#d6d8db";
+            }else {
+                listSpan.classList.remove('text-decoration-line-through');
+                item.style.backgroundColor = "";
+            }
+        })
+
+        item.appendChild(checkBtn);
+        item.appendChild(listSpan);
+        list.appendChild(item);
+    }
+    // 리스트 저장하는 부분
+    function postTodos() {
+        var todos = [];
+        var todoList = document.getElementById('todoList');
+        for ( var i = 0; i < todoList.children.length; i++) {
+            todos.push(todoList.children[i].innerText.trim());
+        }
+        console.log(todos);
+        localStorage.setItem('testStorage', JSON.stringify(todos))
+    }
+    // 리스트 불러오는 부분
+    function getTodos() {
+        var todos = JSON.parse(localStorage.getItem('testStorage'))
+        if(todos) {
+            // todos의 내용물 개수만큼 돌면서 addTodo실행
+            todos.forEach(function(todo) {
+                addTodo(todo);
+                }
+            )
+        }
+    }
+  </script>
+  <!-- Java Script -->
+</body>
+
+</html>
